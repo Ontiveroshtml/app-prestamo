@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextInput, View, TouchableOpacity, StyleSheet, Alert, Button, Text } from 'react-native';
+import { TextInput, View, TouchableOpacity, StyleSheet, Alert, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const Login = ({ navigation }) => {
@@ -19,18 +19,23 @@ const Login = ({ navigation }) => {
         navigation.navigate('Home');
     };
 
+    const handleAdminLogin = () => {
+        navigation.navigate('AdminHome');
+    };
+
     return (
-        <View style={styles.mainContainer}>
+        <View style={styles.container}>
             <View style={styles.headerContainer}>
                 <Text style={styles.headerText}>¡Préstamos Diarios!</Text>
             </View>
-            <View style={styles.container}>
+            <View style={styles.formContainer}>
                 <View style={styles.inputContainer}>
                     <TextInput
                         style={styles.input}
                         placeholder="Correo electrónico o número de teléfono:"
                         onChangeText={(text) => setUsername(text)}
                         value={username}
+                        placeholderTextColor="#666"
                     />
                 </View>
                 <View style={styles.inputContainer}>
@@ -40,6 +45,7 @@ const Login = ({ navigation }) => {
                         secureTextEntry={hidePass}
                         onChangeText={(text) => setPassword(text)}
                         value={password}
+                        placeholderTextColor="#666"
                     />
                     <TouchableOpacity
                         style={styles.icon}
@@ -49,13 +55,17 @@ const Login = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.buttonContainer}>
-                    <Button 
-                        title='Iniciar sesión'
-                        onPress={handleLogin}
-                    />
+                    <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+                        <Text style={styles.loginButtonText}>Iniciar sesión</Text>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.forgotpwdContainer}>
-                    <Text style={styles.forgotpwdText}> ¿Olvidaste tu contraseña? </Text>
+                    <Text style={styles.forgotpwdText}>¿Olvidaste tu contraseña?</Text>
+                </View>
+                <View style={styles.registerContainer}>
+                    <TouchableOpacity onPress={handleAdminLogin}>
+                        <Text style={styles.registerText}>Administrador</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         </View>
@@ -63,30 +73,36 @@ const Login = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-    mainContainer: {
+    container: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#02416D',
+        backgroundColor: '#F5F5F5',
     },
     headerContainer: {
-        marginBottom: 20,
+        position: 'absolute',
+        top: 0,
+        width: '100%',
+        backgroundColor: '#2e5c74',
+        padding: 20,
+        alignItems: 'center',
     },
     headerText: {
         fontSize: 36,
         fontWeight: 'bold',
         color: '#fff',
     },
-    container: {
+    formContainer: {
         alignItems: 'center',
         width: '100%',
+        marginTop: 100,
     },
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        borderColor: 'gray',
+        borderColor: '#2e5c74',
         borderWidth: 1,
-        borderRadius: 5,
+        borderRadius: 8,
         marginTop: 10,
         width: '80%',
         backgroundColor: '#fff',
@@ -95,6 +111,7 @@ const styles = StyleSheet.create({
         flex: 1,
         height: 60,
         paddingLeft: 8,
+        color: '#000',
     },
     icon: {
         padding: 10,
@@ -103,12 +120,28 @@ const styles = StyleSheet.create({
         marginTop: 40,
         width: '80%',
     },
+    loginButton: {
+        backgroundColor: '#2e5c74',
+        paddingVertical: 15,
+        borderRadius: 8,
+        alignItems: 'center',
+    },
+    loginButtonText: {
+        color: '#fff',
+        fontSize: 16,
+    },
     forgotpwdContainer: {
         marginTop: 50,
     },
-    forgotpwdText:{
-        color: 'white',
-    }
+    forgotpwdText: {
+        color: '#2e5c74',
+    },
+    registerContainer: {
+        marginTop: 20,
+    },
+    registerText: {
+        color: '#2e5c74',
+    },
 });
 
 export default Login;
