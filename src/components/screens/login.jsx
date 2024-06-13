@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { TextInput, View, TouchableOpacity, StyleSheet, Alert, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
-const Login = ({ navigation }) => {
+const Login = () => {
     const [hidePass, setHidePass] = useState(true);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const navigation = useNavigation();
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
         if (!username) {
             Alert.alert('Error', 'El campo de correo electrónico o número de teléfono es requerido.');
             return;
@@ -16,11 +18,29 @@ const Login = ({ navigation }) => {
             Alert.alert('Error', 'El campo de contraseña es requerido.');
             return;
         }
-        navigation.navigate('Home');
-    };
 
-    const handleAdminLogin = () => {
-        navigation.navigate('AdminHome');
+        try {
+            const response = await fetch('http://10.0.2.2:3000/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            if (response.status === 200) {
+                const data = await response.json();
+                if (data.role === 1) { // Admin
+                    navigation.navigate('AdminHome');
+                } else if (data.role === 2) { // User
+                    navigation.navigate('Home');
+                }
+            } else {
+                Alert.alert('Error', 'Nombre de usuario o contraseña incorrectos');
+            }
+        } catch (error) {
+            Alert.alert('Error', 'Error de conexión');
+        }
     };
 
     return (
@@ -63,8 +83,8 @@ const Login = ({ navigation }) => {
                     <Text style={styles.forgotpwdText}>¿Olvidaste tu contraseña?</Text>
                 </View>
                 <View style={styles.registerContainer}>
-                    <TouchableOpacity onPress={handleAdminLogin}>
-                        <Text style={styles.registerText}>Administrador</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+                        <Text style={styles.registerText}>Registro</Text>
                     </TouchableOpacity>
                 </View>
             </View>
